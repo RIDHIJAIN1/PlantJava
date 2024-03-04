@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Product Table</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Number</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Image</th>
+        <th>Action</th> <!-- New column for delete button -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Example row, replace with dynamic content from your server -->
+    <tr th:each="product, index : ${products}">
+        <td th:text="${index.index+1}">1</td>
+        <td th:text="${product.name}">Product A</td>
+        <td th:text="${product.price}">$20</td>
+        <td th:text="${product.description}">Description of Product A</td>
+        <td><img th:src="${product.image_url}" alt="Product Image"></td>
+        <!-- Add delete button for each row -->
+        <td>
+            <button onclick="deleteProduct(${product.id})">Delete</button>
+        </td>
+    </tr>
+    <!-- Add more rows as needed -->
+    </tbody>
+</table>
+
+<!-- JavaScript function to delete the product -->
+<script>
+    function deleteProduct(productId) {
+        fetch(`/product/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete product');
+            }
+            // Reload the page to reflect changes
+            location.reload();
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+</script>
+
+</body>
+</html>
